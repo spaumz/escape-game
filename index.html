@@ -3,204 +3,356 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Ez LAN Triathlon</title>
-
+<title>Ez LAN Triathlon – Quiz</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700&family=Exo+2:wght@400;600&display=swap" rel="stylesheet">
 <style>
-* { box-sizing: border-box; }
-
+* { box-sizing: border-box; margin: 0; padding: 0; }
 body {
-  margin:0;
-  font-family: 'Segoe UI', sans-serif;
-  background: radial-gradient(circle at top, #2a2a72, #0f0c29);
-  color:white;
-  display:flex;
-  justify-content:center;
-  align-items:center;
-  height:100vh;
+  font-family: 'Exo 2', sans-serif;
+  background: radial-gradient(ellipse at 30% 20%, #3a1a6e 0%, #1a0a3e 40%, #0a0520 100%);
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  position: relative;
+  overflow: hidden;
 }
-
+#stars { position: fixed; inset: 0; pointer-events: none; z-index: 0; }
+.star {
+  position: absolute;
+  border-radius: 50%;
+  background: white;
+}
 .app {
-  width:100%;
-  max-width:420px;
-  padding:20px;
+  width: 100%;
+  max-width: 440px;
+  position: relative;
+  z-index: 2;
 }
-
 .card {
-  background: rgba(255,255,255,0.05);
-  backdrop-filter: blur(10px);
-  border-radius:20px;
-  padding:25px;
-  box-shadow: 0 0 30px rgba(0,0,0,0.5);
-  text-align:center;
-  animation: fadeIn 0.4s ease;
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(160, 100, 255, 0.3);
+  border-radius: 24px;
+  padding: 32px 28px;
+  text-align: center;
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  animation: fadeUp 0.35s ease;
 }
-
-h1 { font-size:20px; margin-bottom:10px; }
-h2 { font-size:16px; opacity:0.7; }
-
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(12px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+.logo {
+  font-family: 'Orbitron', monospace;
+  font-size: 15px;
+  letter-spacing: 3px;
+  color: #a78bfa;
+  text-transform: uppercase;
+  margin-bottom: 4px;
+}
+.subtitle {
+  font-size: 12px;
+  color: #6d5a90;
+  letter-spacing: 1px;
+  margin-bottom: 22px;
+}
+.progress-bar-wrap {
+  background: rgba(255, 255, 255, 0.08);
+  border-radius: 20px;
+  height: 5px;
+  margin-bottom: 8px;
+  overflow: hidden;
+}
+.progress-bar {
+  height: 100%;
+  border-radius: 20px;
+  background: linear-gradient(90deg, #7c3aed, #ec4899, #f97316);
+  transition: width 0.4s ease;
+}
+.step-label {
+  font-size: 11px;
+  color: #6d5a90;
+  letter-spacing: 1px;
+  margin-bottom: 20px;
+}
 .question {
-  margin:20px 0;
-  font-size:18px;
+  font-size: 17px;
+  color: #e2d9f3;
+  line-height: 1.6;
+  margin-bottom: 20px;
+  min-height: 54px;
 }
-
-input {
-  width:100%;
-  padding:14px;
-  border-radius:12px;
-  border:none;
-  font-size:16px;
-  margin-top:10px;
-  text-align:center;
+.question small {
+  font-size: 13px;
+  color: #7c6ba0;
+  display: block;
+  margin-top: 6px;
 }
-
+.photo-wrap {
+  margin-bottom: 18px;
+  border-radius: 14px;
+  overflow: hidden;
+  border: 1px solid rgba(167, 139, 250, 0.35);
+}
+.photo-wrap img {
+  width: 100%;
+  display: block;
+  max-height: 220px;
+  object-fit: cover;
+}
+input[type="text"] {
+  width: 100%;
+  padding: 14px 16px;
+  border-radius: 12px;
+  border: 1px solid rgba(160, 100, 255, 0.4);
+  background: rgba(255, 255, 255, 0.07);
+  color: #fff;
+  font-size: 15px;
+  font-family: 'Exo 2', sans-serif;
+  text-align: center;
+  outline: none;
+  transition: border-color 0.2s, box-shadow 0.2s;
+  margin-bottom: 14px;
+}
+input[type="text"]:focus {
+  border-color: #a78bfa;
+  box-shadow: 0 0 0 3px rgba(167, 139, 250, 0.2);
+}
+input[type="text"]::placeholder { color: #5a4a7a; }
 button {
-  width:100%;
-  margin-top:15px;
-  padding:14px;
-  border:none;
-  border-radius:12px;
-  font-size:16px;
-  font-weight:bold;
-  background: linear-gradient(90deg,#00c6ff,#ff7b00);
-  color:white;
-  cursor:pointer;
+  width: 100%;
+  padding: 14px;
+  border: none;
+  border-radius: 12px;
+  font-size: 15px;
+  font-weight: 600;
+  font-family: 'Exo 2', sans-serif;
+  letter-spacing: 1px;
+  cursor: pointer;
+  background: linear-gradient(90deg, #7c3aed, #ec4899);
+  color: white;
+  transition: opacity 0.2s, transform 0.1s;
 }
-
-button:active { transform:scale(0.97); }
-
-.progress {
-  margin-top:10px;
-  font-size:12px;
-  opacity:0.7;
+button:hover { opacity: 0.88; }
+button:active { transform: scale(0.97); }
+.feedback {
+  min-height: 22px;
+  font-size: 13px;
+  margin-top: 12px;
+  letter-spacing: 0.5px;
 }
-
-.code {
-  font-size:32px;
-  letter-spacing:4px;
-  margin-top:15px;
-  font-weight:bold;
-  color:#00c6ff;
+.feedback.ok { color: #34d399; }
+.feedback.ko { color: #f87171; }
+.hint {
+  font-size: 12px;
+  color: #5a4a7a;
+  margin-top: 14px;
 }
-
-@keyframes fadeIn {
-  from {opacity:0; transform:translateY(10px);}
-  to {opacity:1; transform:translateY(0);}
+.end-title {
+  font-family: 'Orbitron', monospace;
+  font-size: 24px;
+  color: #f0abfc;
+  margin-bottom: 10px;
+  letter-spacing: 2px;
 }
+.end-sub {
+  font-size: 14px;
+  color: #a78bfa;
+  margin-bottom: 24px;
+}
+.code-box {
+  background: rgba(124, 58, 237, 0.15);
+  border: 1px solid rgba(167, 139, 250, 0.4);
+  border-radius: 14px;
+  padding: 20px;
+  margin-bottom: 20px;
+}
+.code-label {
+  font-size: 11px;
+  color: #7c6ba0;
+  letter-spacing: 2px;
+  margin-bottom: 10px;
+}
+.code-val {
+  font-family: 'Orbitron', monospace;
+  font-size: 30px;
+  letter-spacing: 6px;
+  color: #c4b5fd;
+}
+.restart-btn {
+  background: rgba(255,255,255,0.07);
+  border: 1px solid rgba(160,100,255,0.3);
+  font-size: 13px;
+  padding: 10px;
+  letter-spacing: 1px;
+  margin-top: 4px;
+}
+.restart-btn:hover { background: rgba(255,255,255,0.12); }
 </style>
 </head>
-
 <body>
 
+<div id="stars"></div>
 <div class="app">
   <div class="card" id="app"></div>
 </div>
 
 <script>
+// --- Étoiles de fond ---
+(function() {
+  const wrap = document.getElementById('stars');
+  for (let i = 0; i < 80; i++) {
+    const s = document.createElement('div');
+    s.className = 'star';
+    const sz = Math.random() * 2.5 + 0.5;
+    s.style.cssText = `width:${sz}px;height:${sz}px;top:${Math.random()*100}%;left:${Math.random()*100}%;opacity:${(Math.random()*0.5+0.15).toFixed(2)}`;
+    wrap.appendChild(s);
+  }
+})();
 
-let step = 0;
-let message = "";
-
-const games = [
+// --- Questions ---
+const allGames = [
   {
-    q:"2 → 6 → 7 → 21 → 22 → ?",
-    check:(a)=> a=="66"
+    q: "2 → 6 → 7 → 21 → 22 → ?",
+    hint: "Suite logique, quelle est la prochaine valeur ?",
+    check: a => a.trim() === "66"
   },
   {
-    q:"C L U T H C X → mot ?",
-    check:(a)=> a.toLowerCase()=="clutch"
+    q: "C L U T H C X → Retrouve le mot caché",
+    hint: "Les lettres sont mélangées",
+    check: a => a.trim().toLowerCase() === "clutch"
   },
   {
-    q:"Couleurs du maillot ? (sans virgule, espace uniquement entre chaque mot)",
-    check:(a)=>{
-      a=a.toLowerCase().trim();
-      return a === "bleu violet orange";
+    q: "Quelles sont les couleurs du maillot Ez LAN ?",
+    hint: "Dans l'ordre, séparées par des espaces",
+    check: a => {
+      const v = a.trim().toLowerCase().replace(/,/g, '');
+      return v === "bleu violet orange";
     }
   },
   {
-    q:"Sponsor voiture ?",
-    check:(a)=> a.toLowerCase()=="bmw"
+    q: "Quel est le sponsor affiché sur la voiture Ez LAN ?",
+    check: a => a.trim().toLowerCase() === "bmw"
   },
   {
-    q:"Combien de gourdes ?",
-    check:(a)=> a=="4"
+    q: "Combien de couleurs de gourdes Ez LAN sont à la vente ?",
+    check: a => a.trim() === "4"
   },
   {
-    q:"Sensi Ameel CS ?",
-    check:(a)=> a=="2" // à modifier si besoin
+    q: "Quelle est la sensibilité CS2 du joueur Ameel ?",
+    hint: "Format : X.XX",
+    check: a => a.trim() === "1.33" || a.trim() === "1,33"
   },
   {
-    q:"PCMR signifie ?",
-    check:(a)=> a.toLowerCase().includes("master")
+    q: "PCMR est le sigle d'une communauté gaming célèbre. Que signifie-t-il ?",
+    check: a => a.toLowerCase().includes("master")
   },
   {
-    q:"Combien de minutes dans une partie CS2 en 13 manches ?",
-    check:(a)=> a=="26"
+    q: "Combien y a-t-il de minutes dans une partie CS2 disputée en 13 manches ?",
+    hint: "Sans prolongations",
+    check: a => a.trim() === "26"
   },
   {
-    q:"Je suis impair → enlève une lettre → pair",
-    check:(a)=> a.toLowerCase()=="sept"
+    q: "Je suis impair. Enlève-moi une lettre et je deviens pair.",
+    hint: "Quel est le mot ?",
+    check: a => a.trim().toLowerCase() === "sept"
+  },
+  {
+    q: "Quel est son nom ?",
+    img: "https://pub-89c43e406b6f434ab5f7576b35c3b3cc.r2.dev/2026/04/bea.webp",
+    check: a => {
+      const v = a.trim().toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "");
+      return v === "bea";
+    }
   }
 ];
 
-// mélange aléatoire
-games.sort(()=>Math.random()-0.5);
+let games = [];
+let step = 0;
+let msg = "";
+let msgType = "";
 
-function render(){
-
-  if(step >= games.length){
-    endGame();
-    return;
-  }
-
-  document.getElementById("app").innerHTML = `
-    <h1>🏁 Ez LAN Triathlon</h1>
-    <h2>Épreuve ${step+1} / ${games.length}</h2>
-
-    <div class="question">${games[step].q}</div>
-
-    <input id="answer" placeholder="Ta réponse...">
-
-    <button onclick="submit()">Valider</button>
-
-    <div class="progress">${message}</div>
-  `;
+function shuffle(arr) {
+  return [...arr].sort(() => Math.random() - 0.5);
 }
 
-function submit(){
-  const val = document.getElementById("answer").value;
+function init() {
+  games = shuffle(allGames);
+  step = 0;
+  msg = "";
+  msgType = "";
+  render();
+}
 
-  if(games[step].check(val)){
-    message = "✅ Correct";
+function render() {
+  if (step >= games.length) { endGame(); return; }
+  const pct = Math.round((step / games.length) * 100);
+  const g = games[step];
+  const imgHtml = g.img
+    ? `<div class="photo-wrap"><img src="${g.img}" alt="Qui est cette personne ?"></div>`
+    : "";
+  const hintHtml = g.hint ? `<small>${g.hint}</small>` : "";
+
+  document.getElementById('app').innerHTML = `
+    <div class="logo">Ez LAN Triathlon</div>
+    <div class="subtitle">Quiz des connaisseurs</div>
+    <div class="progress-bar-wrap">
+      <div class="progress-bar" style="width:${pct}%"></div>
+    </div>
+    <div class="step-label">ÉPREUVE ${step + 1} / ${games.length}</div>
+    <div class="question">${g.q}${hintHtml}</div>
+    ${imgHtml}
+    <input type="text" id="ans" placeholder="Ta réponse..." autocomplete="off">
+    <button onclick="submitAns()">Valider</button>
+    <div class="feedback ${msgType}">${msg}</div>
+    <div class="hint">Appuie sur Entrée pour valider</div>
+  `;
+
+  const inp = document.getElementById('ans');
+  inp.addEventListener('keydown', e => { if (e.key === 'Enter') submitAns(); });
+  setTimeout(() => { if (inp) inp.focus(); }, 50);
+}
+
+function submitAns() {
+  const inp = document.getElementById('ans');
+  if (!inp) return;
+  if (games[step].check(inp.value)) {
+    msg = "✓ Correct !";
+    msgType = "ok";
     step++;
-    setTimeout(render, 300);
+    setTimeout(() => { msg = ""; msgType = ""; render(); }, 500);
   } else {
-    message = "❌ Mauvaise réponse";
+    msg = "✗ Mauvaise réponse, réessaie !";
+    msgType = "ko";
     render();
   }
 }
 
-function generateCode(){
-  const chars="ABCDEFGHJKLMNPQRSTUVWXYZ23456789";
-  let code="";
-  for(let i=0;i<5;i++){
-    code+=chars[Math.floor(Math.random()*chars.length)];
-  }
+function genCode() {
+  const chars = "ABCDEFGHJKLMNPQRSTUVWXYZ23456789";
+  let code = "";
+  for (let i = 0; i < 6; i++) code += chars[Math.floor(Math.random() * chars.length)];
   return code;
 }
 
-function endGame(){
-  const code = generateCode();
-
-  document.getElementById("app").innerHTML = `
-    <h1>🎉 Bravo !</h1>
-    <p>Montre ce code :</p>
-    <div class="code">${code}</div>
+function endGame() {
+  const code = genCode();
+  document.getElementById('app').innerHTML = `
+    <div class="end-title">GG WP !</div>
+    <div class="end-sub">Tu as répondu à toutes les questions correctement.</div>
+    <div class="code-box">
+      <div class="code-label">MONTRE CE CODE À L'ACCUEIL</div>
+      <div class="code-val">${code}</div>
+    </div>
+    <div class="hint">Code à usage unique — valable uniquement ce soir</div>
+    <button class="restart-btn" onclick="init()" style="margin-top:16px;">Rejouer</button>
   `;
 }
 
-render();
-
+init();
 </script>
-
 </body>
 </html>
