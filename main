@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<title>Défi MateDating</title>
+<style>
+body {
+  margin:0;
+  font-family: Arial, sans-serif;
+  background: linear-gradient(135deg,#1a1a4f,#6a00ff,#ff7b00);
+  color:white;
+  text-align:center;
+}
+
+.container {
+  max-width:600px;
+  margin:auto;
+  padding:20px;
+}
+
+h1 {
+  font-size:28px;
+}
+
+button {
+  padding:10px 20px;
+  margin-top:15px;
+  border:none;
+  border-radius:8px;
+  background:#ff7b00;
+  color:white;
+  font-weight:bold;
+  cursor:pointer;
+}
+
+input {
+  padding:10px;
+  width:80%;
+  margin-top:10px;
+  border-radius:8px;
+  border:none;
+}
+
+.hidden {
+  display:none;
+}
+
+.progress {
+  margin-top:10px;
+  opacity:0.7;
+}
+</style>
+</head>
+
+<body>
+
+<div class="container">
+  <h1>🎮 Défi MateDating</h1>
+  <p>Termine tous les défis pour obtenir ton code !</p>
+
+  <div id="game"></div>
+  <div class="progress" id="progress"></div>
+</div>
+
+<script>
+
+let step = 0;
+
+const games = [
+  {
+    q:"Suite logique : 2 → 6 → 7 → 21 → 22 → ?",
+    check:(a)=> a=="66"
+  },
+  {
+    q:"Remets les lettres en ordre : C L U T H C X",
+    check:(a)=> a.toLowerCase()=="clutch"
+  },
+  {
+    q:"Quelles sont les 3 couleurs du maillot ? (séparées par des virgules)",
+    check:(a)=>{
+      a=a.toLowerCase();
+      return a.includes("bleu") && a.includes("violet") && a.includes("orange");
+    }
+  },
+  {
+    q:"Quelle marque sponsorise l'événement ?",
+    check:(a)=> a.toLowerCase()=="bmw"
+  },
+  {
+    q:"Combien de couleurs de gourdes ?",
+    check:(a)=> a=="4"
+  },
+  {
+    q:"Combien de sensi Ameel a sur CS ? (indice Twitch)",
+    check:(a)=> a=="2" // tu peux changer
+  },
+  {
+    q:"Que veut dire PCMR ?",
+    check:(a)=> a.toLowerCase().includes("master")
+  },
+  {
+    q:"Logique : Je suis impair, si tu enlèves une lettre je deviens pair. Qui suis-je ?",
+    check:(a)=> a.toLowerCase()=="sept"
+  },
+  {
+    q:"Puzzle : 3 chats attrapent 3 souris en 3 minutes. Combien de chats pour 100 souris en 100 minutes ?",
+    check:(a)=> a=="3"
+  }
+];
+
+// mélange aléatoire
+games.sort(()=>Math.random()-0.5);
+
+function loadGame() {
+  if(step >= games.length){
+    endGame();
+    return;
+  }
+
+  document.getElementById("game").innerHTML = `
+    <h2>Épreuve ${step+1}</h2>
+    <p>${games[step].q}</p>
+    <input id="answer" placeholder="Ta réponse..."/>
+    <br>
+    <button onclick="submit()">Valider</button>
+  `;
+
+  document.getElementById("progress").innerText = `Progression : ${step}/${games.length}`;
+}
+
+function submit(){
+  const val = document.getElementById("answer").value;
+
+  if(games[step].check(val)){
+    step++;
+    loadGame();
+  } else {
+    alert("❌ Mauvaise réponse");
+  }
+}
+
+function generateCode(){
+  const chars="ABCDEFGHJKLMNPQRSTUVWXYZ23456789";
+  let code="";
+  for(let i=0;i<5;i++){
+    code+=chars[Math.floor(Math.random()*chars.length)];
+  }
+  return code;
+}
+
+function endGame(){
+  const code = generateCode();
+
+  document.getElementById("game").innerHTML = `
+    <h2>🎉 Bravo !</h2>
+    <p>Montre ce code au staff :</p>
+    <h1>${code}</h1>
+  `;
+}
+
+loadGame();
+
+</script>
+
+</body>
+</html>
