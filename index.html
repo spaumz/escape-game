@@ -6,9 +6,7 @@
 <title>Ez LAN Triathlon</title>
 
 <style>
-* {
-  box-sizing: border-box;
-}
+* { box-sizing: border-box; }
 
 body {
   margin:0;
@@ -37,15 +35,8 @@ body {
   animation: fadeIn 0.4s ease;
 }
 
-h1 {
-  font-size:20px;
-  margin-bottom:10px;
-}
-
-h2 {
-  font-size:16px;
-  opacity:0.7;
-}
+h1 { font-size:20px; margin-bottom:10px; }
+h2 { font-size:16px; opacity:0.7; }
 
 .question {
   margin:20px 0;
@@ -75,22 +66,12 @@ button {
   cursor:pointer;
 }
 
-button:active {
-  transform:scale(0.97);
-}
+button:active { transform:scale(0.97); }
 
 .progress {
   margin-top:10px;
   font-size:12px;
-  opacity:0.5;
-}
-
-.success {
-  color:#00ffae;
-}
-
-.error {
-  color:#ff4d4d;
+  opacity:0.7;
 }
 
 .code {
@@ -129,10 +110,10 @@ const games = [
     check:(a)=> a.toLowerCase()=="clutch"
   },
   {
-    q:"Couleurs du maillot ?",
+    q:"Couleurs du maillot ? (sans virgule, espace uniquement entre chaque mot)",
     check:(a)=>{
-      a=a.toLowerCase();
-      return a.includes("bleu") && a.includes("violet") && a.includes("orange");
+      a=a.toLowerCase().trim();
+      return a === "bleu violet orange";
     }
   },
   {
@@ -145,23 +126,23 @@ const games = [
   },
   {
     q:"Sensi Ameel CS ?",
-    check:(a)=> a=="2" // à modifier
+    check:(a)=> a=="2" // à modifier si besoin
   },
   {
     q:"PCMR signifie ?",
     check:(a)=> a.toLowerCase().includes("master")
   },
   {
-    q:"Je suis impair → enlève une lettre → pair",
-    check:(a)=> a.toLowerCase()=="sept"
+    q:"Combien de minutes dans une partie CS2 en 13 manches ?",
+    check:(a)=> a=="26"
   },
   {
-    q:"3 chats → 3 souris → 3 min. 100 souris → ? chats ?",
-    check:(a)=> a=="3"
+    q:"Je suis impair → enlève une lettre → pair",
+    check:(a)=> a.toLowerCase()=="sept"
   }
 ];
 
-// mélange
+// mélange aléatoire
 games.sort(()=>Math.random()-0.5);
 
 function render(){
