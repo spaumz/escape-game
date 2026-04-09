@@ -2,140 +2,199 @@
 <html lang="fr">
 <head>
 <meta charset="UTF-8">
-<title>Défi MateDating</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Ez LAN Triathlon</title>
+
 <style>
-body {
-  margin:0;
-  font-family: Arial, sans-serif;
-  background: linear-gradient(135deg,#1a1a4f,#6a00ff,#ff7b00);
-  color:white;
-  text-align:center;
+* {
+  box-sizing: border-box;
 }
 
-.container {
-  max-width:600px;
-  margin:auto;
+body {
+  margin:0;
+  font-family: 'Segoe UI', sans-serif;
+  background: radial-gradient(circle at top, #2a2a72, #0f0c29);
+  color:white;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  height:100vh;
+}
+
+.app {
+  width:100%;
+  max-width:420px;
   padding:20px;
 }
 
-h1 {
-  font-size:28px;
+.card {
+  background: rgba(255,255,255,0.05);
+  backdrop-filter: blur(10px);
+  border-radius:20px;
+  padding:25px;
+  box-shadow: 0 0 30px rgba(0,0,0,0.5);
+  text-align:center;
+  animation: fadeIn 0.4s ease;
 }
 
-button {
-  padding:10px 20px;
-  margin-top:15px;
-  border:none;
-  border-radius:8px;
-  background:#ff7b00;
-  color:white;
-  font-weight:bold;
-  cursor:pointer;
+h1 {
+  font-size:20px;
+  margin-bottom:10px;
+}
+
+h2 {
+  font-size:16px;
+  opacity:0.7;
+}
+
+.question {
+  margin:20px 0;
+  font-size:18px;
 }
 
 input {
-  padding:10px;
-  width:80%;
-  margin-top:10px;
-  border-radius:8px;
+  width:100%;
+  padding:14px;
+  border-radius:12px;
   border:none;
+  font-size:16px;
+  margin-top:10px;
+  text-align:center;
 }
 
-.hidden {
-  display:none;
+button {
+  width:100%;
+  margin-top:15px;
+  padding:14px;
+  border:none;
+  border-radius:12px;
+  font-size:16px;
+  font-weight:bold;
+  background: linear-gradient(90deg,#00c6ff,#ff7b00);
+  color:white;
+  cursor:pointer;
+}
+
+button:active {
+  transform:scale(0.97);
 }
 
 .progress {
   margin-top:10px;
-  opacity:0.7;
+  font-size:12px;
+  opacity:0.5;
+}
+
+.success {
+  color:#00ffae;
+}
+
+.error {
+  color:#ff4d4d;
+}
+
+.code {
+  font-size:32px;
+  letter-spacing:4px;
+  margin-top:15px;
+  font-weight:bold;
+  color:#00c6ff;
+}
+
+@keyframes fadeIn {
+  from {opacity:0; transform:translateY(10px);}
+  to {opacity:1; transform:translateY(0);}
 }
 </style>
 </head>
 
 <body>
 
-<div class="container">
-  <h1>🎮 Défi MateDating</h1>
-  <p>Termine tous les défis pour obtenir ton code !</p>
-
-  <div id="game"></div>
-  <div class="progress" id="progress"></div>
+<div class="app">
+  <div class="card" id="app"></div>
 </div>
 
 <script>
 
 let step = 0;
+let message = "";
 
 const games = [
   {
-    q:"Suite logique : 2 → 6 → 7 → 21 → 22 → ?",
+    q:"2 → 6 → 7 → 21 → 22 → ?",
     check:(a)=> a=="66"
   },
   {
-    q:"Remets les lettres en ordre : C L U T H C X",
+    q:"C L U T H C X → mot ?",
     check:(a)=> a.toLowerCase()=="clutch"
   },
   {
-    q:"Quelles sont les 3 couleurs du maillot ? (séparées par des virgules)",
+    q:"Couleurs du maillot ?",
     check:(a)=>{
       a=a.toLowerCase();
       return a.includes("bleu") && a.includes("violet") && a.includes("orange");
     }
   },
   {
-    q:"Quelle marque sponsorise l'événement ?",
+    q:"Sponsor voiture ?",
     check:(a)=> a.toLowerCase()=="bmw"
   },
   {
-    q:"Combien de couleurs de gourdes ?",
+    q:"Combien de gourdes ?",
     check:(a)=> a=="4"
   },
   {
-    q:"Combien de sensi Ameel a sur CS ? (indice Twitch)",
-    check:(a)=> a=="2" // tu peux changer
+    q:"Sensi Ameel CS ?",
+    check:(a)=> a=="2" // à modifier
   },
   {
-    q:"Que veut dire PCMR ?",
+    q:"PCMR signifie ?",
     check:(a)=> a.toLowerCase().includes("master")
   },
   {
-    q:"Logique : Je suis impair, si tu enlèves une lettre je deviens pair. Qui suis-je ?",
+    q:"Je suis impair → enlève une lettre → pair",
     check:(a)=> a.toLowerCase()=="sept"
   },
   {
-    q:"Puzzle : 3 chats attrapent 3 souris en 3 minutes. Combien de chats pour 100 souris en 100 minutes ?",
+    q:"3 chats → 3 souris → 3 min. 100 souris → ? chats ?",
     check:(a)=> a=="3"
   }
 ];
 
-// mélange aléatoire
+// mélange
 games.sort(()=>Math.random()-0.5);
 
-function loadGame() {
+function render(){
+
   if(step >= games.length){
     endGame();
     return;
   }
 
-  document.getElementById("game").innerHTML = `
-    <h2>Épreuve ${step+1}</h2>
-    <p>${games[step].q}</p>
-    <input id="answer" placeholder="Ta réponse..."/>
-    <br>
-    <button onclick="submit()">Valider</button>
-  `;
+  document.getElementById("app").innerHTML = `
+    <h1>🏁 Ez LAN Triathlon</h1>
+    <h2>Épreuve ${step+1} / ${games.length}</h2>
 
-  document.getElementById("progress").innerText = `Progression : ${step}/${games.length}`;
+    <div class="question">${games[step].q}</div>
+
+    <input id="answer" placeholder="Ta réponse...">
+
+    <button onclick="submit()">Valider</button>
+
+    <div class="progress">${message}</div>
+  `;
 }
 
 function submit(){
   const val = document.getElementById("answer").value;
 
   if(games[step].check(val)){
+    message = "✅ Correct";
     step++;
-    loadGame();
+    setTimeout(render, 300);
   } else {
-    alert("❌ Mauvaise réponse");
+    message = "❌ Mauvaise réponse";
+    render();
   }
 }
 
@@ -151,14 +210,14 @@ function generateCode(){
 function endGame(){
   const code = generateCode();
 
-  document.getElementById("game").innerHTML = `
-    <h2>🎉 Bravo !</h2>
-    <p>Montre ce code au staff :</p>
-    <h1>${code}</h1>
+  document.getElementById("app").innerHTML = `
+    <h1>🎉 Bravo !</h1>
+    <p>Montre ce code :</p>
+    <div class="code">${code}</div>
   `;
 }
 
-loadGame();
+render();
 
 </script>
 
