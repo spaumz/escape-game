@@ -98,10 +98,16 @@ button:active { transform:scale(0.97); }
 .feedback.ko { color:#f87171; }
 .hint { font-size:12px; color:#5a4a7a; margin-top:14px; }
 .end-title { font-family:'Orbitron',monospace; font-size:24px; color:#f0abfc; margin-bottom:10px; letter-spacing:2px; }
-.end-sub { font-size:14px; color:#a78bfa; margin-bottom:24px; }
-.code-box { background:rgba(124,58,237,0.15); border:1px solid rgba(167,139,250,0.4); border-radius:14px; padding:20px; margin-bottom:20px; }
-.code-label { font-size:11px; color:#7c6ba0; letter-spacing:2px; margin-bottom:10px; }
+.end-sub { font-size:14px; color:#a78bfa; margin-bottom:20px; }
+.end-reward {
+  font-size:16px; color:#fde68a; font-weight:600;
+  margin-bottom:20px; letter-spacing:0.5px;
+}
+.code-box { background:rgba(124,58,237,0.15); border:1px solid rgba(167,139,250,0.4); border-radius:14px; padding:20px; margin-bottom:14px; }
+.code-label { font-size:11px; color:#7c6ba0; letter-spacing:1.5px; margin-bottom:10px; line-height:1.5; }
+.code-label strong { color:#c4b5fd; display:block; font-size:13px; margin-top:2px; }
 .code-val { font-family:'Orbitron',monospace; font-size:30px; letter-spacing:6px; color:#c4b5fd; }
+.code-valid { font-size:11px; color:#6d5a90; margin-top:10px; }
 .restart-btn { background:rgba(255,255,255,0.07); border:1px solid rgba(160,100,255,0.3); font-size:13px; padding:10px; letter-spacing:1px; margin-top:8px; }
 .restart-btn:hover { background:rgba(255,255,255,0.12); }
 </style>
@@ -133,8 +139,8 @@ const COLORS_OPTIONS = [
   { label: "Vert",   hex: "#22c55e", correct: false },
   { label: "Jaune",  hex: "#eab308", correct: false },
   { label: "Rose",   hex: "#ec4899", correct: false },
-  { label: "Noir",   hex: "#1f1f1f", correct: false },
-  { label: "Blanc",  hex: "#f1f5f9", correct: false },
+  { label: "Noir",   hex: "#222222", correct: false },
+  { label: "Blanc",  hex: "#e2e8f0", correct: false },
 ];
 
 const allGames = [
@@ -144,14 +150,14 @@ const allGames = [
     check: a => a.trim() === "66"
   },
   {
-    q: "C L U T H C X → Retrouve le mot caché",
+    q: "H U T C L C → Retrouve le mot caché",
     hint: "Les lettres sont mélangées",
     check: a => a.trim().toLowerCase() === "clutch"
   },
   {
     type: "colors",
-    q: "Quelles sont les couleurs du maillot Ez LAN ?",
-    hint: "Sélectionne toutes les bonnes couleurs",
+    q: "Quelles sont les 3 couleurs principales du maillot Ez LAN ?",
+    hint: "Sélectionne les 3 bonnes couleurs",
     check: () => {
       const selected = [...document.querySelectorAll('.color-option.selected')].map(el => el.dataset.label);
       const correct = COLORS_OPTIONS.filter(c => c.correct).map(c => c.label);
@@ -181,15 +187,17 @@ const allGames = [
     check: a => a.trim() === "1.55" || a.trim() === "1,55"
   },
   {
-    q: "Dans quel jeu trouve-t-on les armes : Famas, AUG, Galil AR et SG 553 ?",
+    q: "Une fois plantée, la bombe dans CS2 a un compte à rebours de ?",
+    hint: "En secondes",
     check: a => {
-      const v = a.trim().toLowerCase();
-      return v.includes("cs") || v.includes("counter") || v.includes("cs2") || v.includes("counter-strike");
+      const v = a.trim().toLowerCase().replace(/\s/g, "");
+      return v === "45" || v === "45s" || v === "45sec" || v === "45secondes" || v === "45seconde";
     }
   },
   {
     q: "Quel est son nom ?",
     img: "https://pub-89c43e406b6f434ab5f7576b35c3b3cc.r2.dev/2026/04/bea.webp",
+    hint: "Tu peux aussi demander à des gens qui connaissent Ameel ;)",
     check: a => {
       const v = a.trim().toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "");
       return v === "bea";
@@ -245,7 +253,7 @@ function render() {
 
 window.submitAns = function() {
   const g = games[step];
-  let correct = g.type === "colors"
+  const correct = g.type === "colors"
     ? g.check()
     : g.check(document.getElementById('ans')?.value || "");
 
@@ -269,11 +277,12 @@ function endGame() {
   document.getElementById('app').innerHTML = `
     <div class="end-title">GG WP !</div>
     <div class="end-sub">Tu as répondu à toutes les questions correctement.</div>
+    <div class="end-reward">Tu recevras une récompense !</div>
     <div class="code-box">
-      <div class="code-label">MONTRE CE CODE À L'ACCUEIL</div>
+      <div class="code-label">MONTRE CE CODE À NOTRE GAME MASTER<strong>"Valentin"</strong></div>
       <div class="code-val">${genCode()}</div>
+      <div class="code-valid">Valable uniquement aujourd'hui</div>
     </div>
-    <div class="hint">Code à usage unique — valable uniquement ce soir</div>
     <button class="restart-btn" onclick="init()">Rejouer</button>
   `;
 }
