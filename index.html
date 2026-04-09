@@ -97,19 +97,25 @@ button:active { transform:scale(0.97); }
 .feedback.ok { color:#34d399; }
 .feedback.ko { color:#f87171; }
 .hint { font-size:12px; color:#5a4a7a; margin-top:14px; }
+
 .end-title { font-family:'Orbitron',monospace; font-size:24px; color:#f0abfc; margin-bottom:10px; letter-spacing:2px; }
-.end-sub { font-size:14px; color:#a78bfa; margin-bottom:20px; }
-.end-reward {
-  font-size:16px; color:#fde68a; font-weight:600;
-  margin-bottom:20px; letter-spacing:0.5px;
+.end-sub { font-size:14px; color:#a78bfa; margin-bottom:16px; }
+.end-reward { font-size:16px; color:#fde68a; font-weight:600; margin-bottom:20px; letter-spacing:0.5px; }
+.code-box { background:rgba(124,58,237,0.15); border:1px solid rgba(167,139,250,0.4); border-radius:14px; padding:20px; margin-bottom:16px; }
+.code-label { font-size:11px; color:#7c6ba0; letter-spacing:1.5px; margin-bottom:6px; line-height:1.6; }
+.code-label strong { color:#c4b5fd; display:block; font-size:13px; }
+.code-val { font-family:'Orbitron',monospace; font-size:30px; letter-spacing:6px; color:#c4b5fd; margin: 8px 0; }
+.code-valid { font-size:11px; color:#6d5a90; margin-top:8px; }
+.warning-box {
+  background: rgba(253,230,138,0.07);
+  border: 1px solid rgba(253,230,138,0.25);
+  border-radius: 12px;
+  padding: 14px 16px;
+  font-size: 13px;
+  color: #fde68a;
+  line-height: 1.6;
 }
-.code-box { background:rgba(124,58,237,0.15); border:1px solid rgba(167,139,250,0.4); border-radius:14px; padding:20px; margin-bottom:14px; }
-.code-label { font-size:11px; color:#7c6ba0; letter-spacing:1.5px; margin-bottom:10px; line-height:1.5; }
-.code-label strong { color:#c4b5fd; display:block; font-size:13px; margin-top:2px; }
-.code-val { font-family:'Orbitron',monospace; font-size:30px; letter-spacing:6px; color:#c4b5fd; }
-.code-valid { font-size:11px; color:#6d5a90; margin-top:10px; }
-.restart-btn { background:rgba(255,255,255,0.07); border:1px solid rgba(160,100,255,0.3); font-size:13px; padding:10px; letter-spacing:1px; margin-top:8px; }
-.restart-btn:hover { background:rgba(255,255,255,0.12); }
+.warning-box strong { display: block; margin-bottom: 4px; font-size: 14px; }
 </style>
 </head>
 <body>
@@ -182,7 +188,7 @@ const allGames = [
     check: a => a.toLowerCase().includes("master")
   },
   {
-    q: "Combien de minutes dure une manche en CS2 ?",
+    q: "Sur CS2, combien de minutes dure une manche ?",
     hint: "Format : X.XX",
     check: a => a.trim() === "1.55" || a.trim() === "1,55"
   },
@@ -217,7 +223,7 @@ function init() {
 
 function renderColors() {
   const opts = shuffle(COLORS_OPTIONS);
-  return `<div class="colors-grid" id="colors-grid">${opts.map(c => `
+  return `<div class="colors-grid">${opts.map(c => `
     <div class="color-option" data-label="${c.label}" onclick="this.classList.toggle('selected')">
       <div class="color-dot" style="background:${c.hex}"></div>
       <span>${c.label}</span>
@@ -283,7 +289,10 @@ function endGame() {
       <div class="code-val">${genCode()}</div>
       <div class="code-valid">Valable uniquement aujourd'hui</div>
     </div>
-    <button class="restart-btn" onclick="init()">Rejouer</button>
+    <div class="warning-box">
+      <strong>Attention !</strong>
+      Si tu quittes cette page, ton résultat sera réinitialisé. Si tu as peur de le perdre, prends une capture d'écran !
+    </div>
   `;
 }
 
